@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const botTypeClasses = {
   Assault: "icon military",
   Defender: "icon shield",
@@ -8,15 +9,34 @@ const botTypeClasses = {
   Witch: "icon magic",
   Captain: "icon star",
 };
+const URL = "http://localhost:8002/bots"
 
-function BotCard({ bot }) {
+function BotCard({ bot, addArmy, deleteBot}) {
+  //remove bot from the army
+  function handleClickBot(bot, e) {
+    if(e.target.parentNode.className === "image") {
+      addArmy(bot)
+    }
+    
+  }
+//permanently delete a bot
+function handleDeleteBot(bot) {
+    fetch(`${URL}/${bot.id}`, {
+    method: "DELETE"
+
+  })
+  .then(res => res.json())
+  .then(() => deleteBot(bot.id) )
+  }
+ 
   return (
     <div className="ui column">
       <div
         className="ui card"
         key={bot.id}
-        onClick={() => console.log("add code to connect event listener")}
+        onClick={(e) => handleClickBot(bot, e)}
       >
+        
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />
         </div>
@@ -48,10 +68,10 @@ function BotCard({ bot }) {
               <button
                 className="ui mini red button"
                 onClick={() =>
-                  console.log("add code to connect event listener")
+                  handleDeleteBot(bot)
                 }
               >
-                x
+                X
               </button>
             </div>
           </span>
